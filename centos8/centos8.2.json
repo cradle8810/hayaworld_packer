@@ -1,0 +1,158 @@
+{
+  "builders": [
+    {
+      "boot_command": [
+        "{{ user `boot_command` }}"
+      ],
+      "boot_wait": "5s",
+      "disk_size": "{{ user `disk_size_mb` }}",
+      "guest_os_type": "RedHat_64",
+      "http_directory": "./kickstart/",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+      "iso_url": "{{ user `iso_url` }}",
+      "name": "virtualbox",
+      "shutdown_command": "/sbin/shutdown -h now",
+      "shutdown_timeout": "{{ user `shutdown_timeout` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_timeout": "20m",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "type": "virtualbox-iso",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{ user `memory_mb` }}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{ user `cpus` }}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--graphicscontroller",
+          "VMSVGA"
+        ]
+      ]
+    },
+    {
+      "boot_command": [
+        "{{ user `boot_command` }}"
+      ],
+      "boot_wait": "5s",
+      "cdrom_adapter_type": "scsi",
+      "cpus": "{{ user `cpus` }}",
+      "disk_adapter_type": "scsi",
+      "disk_size": "{{ user `disk_size_mb` }}",
+      "disk_type_id": 0,
+      "guest_os_type": "centos7-64",
+      "http_directory": "./kickstart/",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+      "iso_url": "{{ user `iso_url` }}",
+      "memory": "{{ user `memory_mb` }}",
+      "name": "vmware",
+      "network_adapter_type": "{{ user `vmware_network_adapter_type` }}",
+      "ovftool_options": "{{ user `vmware_format` }}",
+      "shutdown_command": "/sbin/shutdown -h now",
+      "shutdown_timeout": "{{ user `shutdown_timeout` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "type": "vmware-iso",
+      "version": 13,
+      "vnc_bind_address": "0.0.0.0",
+      "vnc_disable_password": true,
+      "vnc_port_max": "5900",
+      "vnc_port_min": "5900"
+    },
+    {
+      "CPUs": "{{ user `cpus` }}",
+      "RAM": "{{ user `memory_mb` }}",
+      "boot_command": [
+        "{{ user `vc_boot_command` }}"
+      ],
+      "boot_order": "disk,cdrom",
+      "boot_wait": "5s",
+      "cdrom_type": "sata",
+      "cluster": "{{ user `vc_cluster` }}",
+      "datacenter": "{{ user `vc_datacenter` }}",
+      "datastore": "{{ user `vc_datastore` }}",
+      "disk_controller_type": "pvscsi",
+      "firmware": "bios",
+      "guest_os_type": "centos64Guest",
+      "host": "{{ user `vc_host` }}",
+      "http_directory": "./kickstart/",
+      "insecure_connection": true,
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_urls": [
+        "{{ user `iso_url` }}"
+      ],
+      "name": "vcenter",
+      "network_adapters": [
+        {
+          "network": "{{ user `vc_network_01` }}",
+          "network_card": "{{ user `vc_network_01_type` }}"
+        }
+      ],
+      "password": "{{ user `vc_password` }}",
+      "shutdown_command": "/sbin/shutdown -h now",
+      "shutdown_timeout": "{{ user `shutdown_timeout` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "storage": [
+        {
+          "disk_size": "{{ user `disk_size_mb` }}",
+          "disk_thin_provisioned": true
+        }
+      ],
+      "type": "vsphere-iso",
+      "username": "{{ user `vc_username` }}",
+      "vcenter_server": "{{ user `vc_vcenter_IP` }}",
+      "vm_name": "{{ user `vc_vmname` }}",
+      "vm_version": 11
+    }
+  ],
+  "provisioners": [
+    {
+	"inline": [
+	    "curl -o /etc/ssh/sshd_config https://raw.githubusercontent.com/cradle8810/sshd_config/master/sshd_config_2nd",
+	    "systemctl restart sshd"
+	],
+	"type": "shell"
+    }
+  ],
+  "variables": {
+    "boot_command": "<tab> text=1 inst.ks={{ user `boot_command_inst_ks` }} geoloc=0 rd.live.check=0 inst.sshd=1 rd.live.ram=1 <enter><wait>",
+    "boot_command_inst_ks": "http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `kickstart_file` }}",
+    "boot_vc_ip": "192.168.1.250",
+    "boot_vc_netmask": "255.255.255.0",
+    "cpus": "2",
+    "disk_size_mb": "30000",
+    "iso_checksum": "c87a2d81d67bbaeaf646aea5bedd70990078ec252fc52f5a7d65ff609871e255",
+    "iso_checksum_type": "none",
+    "iso_url": "http://ftp.iij.ad.jp/pub/linux/centos/8.2.2004/isos/x86_64/CentOS-8.2.2004-x86_64-dvd1.iso",
+    "kickstart_file": "ks.cfg",
+    "memory_mb": "2048",
+    "shutdown_timeout": "5m",
+    "ssh_password": "VMware1!VMware1!",
+    "ssh_username": "root",
+    "vc_boot_command": "<tab> ip={{ user `boot_vc_ip` }} netmask={{ user `boot_vc_netmask`}} text=1 inst.ks={{ user `boot_command_inst_ks` }} geoloc=0 rd.live.check=0 inst.sshd=1 rd.live.ram=1 <enter><wait>",
+    "vc_cluster": "",
+    "vc_datacenter": "",
+    "vc_datastore": "",
+    "vc_folder": "",
+    "vc_host": "",
+    "vc_network_01": "",
+    "vc_network_01_type": "vmxnet3",
+    "vc_password": "",
+    "vc_username": "administrator@vsphere.local",
+    "vc_vcenter_IP": "",
+    "vc_vmname": "",
+    "vmware_format": "ova",
+    "vmware_network_adapter_type": "E1000"
+  }
+}
+

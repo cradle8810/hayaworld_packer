@@ -32,10 +32,11 @@ packer build -var "cpus=4" -var "memory_mb=4096" --only=virtualbox centos8.1.jso
 
 ### For vCenter
 You need to set these valiables.
- - `vcenter_server` for vCenter Server's FQDN.
+ - `vc_vcenter_IP` for vCenter Server's FQDN or its IP address.
  - `password` for vCenter Server's Password. (with the user which has sufficient privilege. This template sets `administrator@vsphere.local` as the superuser.)
  - `vm_name` for this Virtual Machine name displayed on vCenter Server inventory.
- - `host` or `cluster` for the destination to deploy this Virtual Machine.
+ - `vc_esxi_host` or `vc_cluster` for the destination to deploy this Virtual Machine.
+ - `vc_cluster` for choose cluster to deploy.
 
 ## Kickstart Information
  - Network Configuration is configured on kickstart file.

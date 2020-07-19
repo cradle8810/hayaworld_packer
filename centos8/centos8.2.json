@@ -8,8 +8,7 @@
       "disk_size": "{{ user `disk_size_mb` }}",
       "guest_os_type": "RedHat_64",
       "http_directory": "./kickstart/",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
+      "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
       "name": "virtualbox",
       "shutdown_command": "/sbin/shutdown -h now",
@@ -51,7 +50,6 @@
       "disk_type_id": 0,
       "guest_os_type": "centos7-64",
       "http_directory": "./kickstart/",
-      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "iso_url": "{{ user `iso_url` }}",
       "memory": "{{ user `memory_mb` }}",
       "name": "vmware",
@@ -83,7 +81,7 @@
       "disk_controller_type": "pvscsi",
       "firmware": "bios",
       "guest_os_type": "centos64Guest",
-      "host": "{{ user `vc_host` }}",
+      "host": "{{ user `vc_esxi_host` }}",
       "http_directory": "./kickstart/",
       "insecure_connection": true,
       "iso_checksum": "{{ user `iso_checksum` }}",
@@ -117,11 +115,11 @@
   ],
   "provisioners": [
     {
-	"inline": [
-	    "curl -o /etc/ssh/sshd_config https://raw.githubusercontent.com/cradle8810/sshd_config/master/sshd_config_2nd",
-	    "systemctl restart sshd"
-	],
-	"type": "shell"
+      "inline": [
+        "curl -o /etc/ssh/sshd_config https://raw.githubusercontent.com/cradle8810/sshd_config/master/sshd_config_2nd",
+        "systemctl restart sshd"
+      ],
+      "type": "shell"
     }
   ],
   "variables": {
@@ -132,7 +130,6 @@
     "cpus": "2",
     "disk_size_mb": "30000",
     "iso_checksum": "c87a2d81d67bbaeaf646aea5bedd70990078ec252fc52f5a7d65ff609871e255",
-    "iso_checksum_type": "none",
     "iso_url": "http://ftp.iij.ad.jp/pub/linux/centos/8.2.2004/isos/x86_64/CentOS-8.2.2004-x86_64-dvd1.iso",
     "kickstart_file": "ks.cfg",
     "memory_mb": "2048",
@@ -143,8 +140,8 @@
     "vc_cluster": "",
     "vc_datacenter": "",
     "vc_datastore": "",
+    "vc_esxi_host": "",
     "vc_folder": "",
-    "vc_host": "",
     "vc_network_01": "",
     "vc_network_01_type": "vmxnet3",
     "vc_password": "",

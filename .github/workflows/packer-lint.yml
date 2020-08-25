@@ -10,9 +10,14 @@ on: [push, pull_request]
 jobs:
   packer_valid:
     runs-on: ubuntu-18.04
+    container:
+      image: hashicorp/packer
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
+      - name: pwd
+        run: pwd
+      - name: ls
+        run: ls -RF
       - name: packer validation
-        uses: docker://hashicorp/packer
-        run: packer validate hayaworld_packer/centos8/centos8.2.json
+        run: validate hayaworld_packer/centos8/centos8.2.json

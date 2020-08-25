@@ -1,13 +1,19 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Packer_Template_Validation
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on: [push, pull_request]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  packer_inspection:
+    runs-on: ubuntu-18.04
+    container:
+      image: hashicorp/packer
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: packer inspect
+        run: |+
+          packer inspect \
+          centos8/centos8.2.json
   packer_validate:
     runs-on: ubuntu-18.04
     container:
@@ -15,7 +21,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
-      - name: packer validation
+      - name: packer config validation
         run: |+
           packer validate \
           -var vc_vcenter_IP=192.168.1.1 \
@@ -25,3 +31,7 @@ jobs:
           -var vc_vmname=test \
           -var iso_checksum_type=sha256 \
           centos8/centos8.2.json
+      - name: packer config normalized check
+        run: |+
+          packer fix  centos8/centos8.2.json |\
+          diff - centos8/centos8.2.json

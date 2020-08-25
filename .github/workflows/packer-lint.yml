@@ -21,9 +21,9 @@ jobs:
         run: ls -RF
       - name: packer validation
         run: |+
-          packer validate
-          "-var vcenter_server=test \"
-          "-var password=test \"
-          "-var vm_name=test \"
-          "-var host=test \"
+          packer validate \
+          -var vcenter_server=test \
+          -var password=test \
+          -var vm_name=test \
+          -var host=test \
           centos8/centos8.2.json

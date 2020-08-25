@@ -50,6 +50,7 @@
       "disk_type_id": 0,
       "guest_os_type": "centos7-64",
       "http_directory": "./kickstart/",
+      "iso_checksum": "{{ user `iso_checksum` }}",
       "iso_url": "{{ user `iso_url` }}",
       "memory": "{{ user `memory_mb` }}",
       "name": "vmware",
